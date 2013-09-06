@@ -11,8 +11,11 @@
 
 require 'spec_helper'
 
+# Write failing test, then write code to get the test to pass! TDD!
+
 describe User do
 
+  # Create our test user with whom we can run tests against our model
   before do
     @user = User.new(name: "Example User", email: "user@example.com",
                      password: "foobar", password_confirmation: "foobar")
@@ -27,11 +30,11 @@ describe User do
   it { should respond_to(:password_confirmation) }
   it { should respond_to(:authenticate) }
 
-
   it { should be_valid }
 
   describe "when name is not present" do
     before { @user.name = " " }
+    # be_valid calls valid? on @user
     it { should_not be_valid }
   end
 
@@ -50,6 +53,7 @@ describe User do
       addresses = %w[user@foo,com user_at_foo.org example.user@foo.
                      foo@bar_baz.com foo@bar+baz.com]
       addresses.each do |invalid_address|
+        # Assign an invalid email address to the user
         @user.email = invalid_address
         @user.should_not be_valid
       end
@@ -74,6 +78,16 @@ describe User do
     end
 
     it { should_not be_valid }
+  end
+
+  describe "email address with  mixed case" do
+    let(:mixed_case_email) { "Foo@ExamPlE.CoM" }
+
+    it "should be saved as all lower-case" do
+      @user.email = mixed_case_email
+      @user.save
+      @user.reload.email.should == mixed_case_email.downcase
+    end
   end
 
   describe "when password is not present" do
