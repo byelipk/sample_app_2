@@ -14,7 +14,7 @@ class User < ActiveRecord::Base
   attr_accessible :name, :email, :password, :password_confirmation
 
   # :password is provided by:
-  # has_secure_password
+  has_secure_password
   # If has_secure_password is unavailable, we will throw an exception
 
   # All emails entering the DB will be downcased
