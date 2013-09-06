@@ -30,11 +30,13 @@ describe User do
   it { should respond_to(:password_confirmation) }
   it { should respond_to(:authenticate) }
 
+  # Base user validation methods
   it { should be_valid }
 
   describe "when name is not present" do
+    # Before the test runs, set variable to failing value
     before { @user.name = " " }
-    # be_valid calls valid? on @user
+    # Confirm value is invalid
     it { should_not be_valid }
   end
 
@@ -48,6 +50,8 @@ describe User do
     it { should_not be_valid }
   end
 
+  
+  # Email format validations 
   describe "when email format is invalid" do
     it "should be invalid" do
       addresses = %w[user@foo,com user_at_foo.org example.user@foo.
@@ -90,6 +94,8 @@ describe User do
     end
   end
 
+  
+  # Password validations
   describe "when password is not present" do
     before { @user.password = @user.password_confirmation = " " }
     it { should_not be_valid }
@@ -110,6 +116,8 @@ describe User do
     it { should be_invalid }
   end
 
+
+  # Authenticatation validations
   describe "return value of authenticate method" do
     before { @user.save }
     let(:found_user) { User.find_by_email(@user.email) }
