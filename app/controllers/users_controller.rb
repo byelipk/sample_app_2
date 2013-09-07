@@ -75,6 +75,6 @@ class UsersController < ApplicationController
 
   def correct_user
     @user = User.find(params[:id])
-    redirect_to root_path, notice: "Punk!" unless current_user?(@user)
+    redirect_to root_path, notice: "WTF! You trying to hack my shit?" unless current_user?(@user)
   end
 end
