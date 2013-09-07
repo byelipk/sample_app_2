@@ -1,9 +1,10 @@
 require 'spec_helper'
 
 describe "Static pages" do
-  # We tell rspec that the subject of all these tests is page
+  # Define test subject
    subject { page }
 
+   # TEST: Existence of home page
    describe "Home page" do
      before { visit root_path }
 
@@ -12,6 +13,7 @@ describe "Static pages" do
      it { should_not have_selector 'title', text: '| Home' }
    end
 
+   # TEST: Existence of help page
    describe "Help page" do
      before { visit help_path }
 
@@ -19,6 +21,7 @@ describe "Static pages" do
      it { should have_selector('title', text: full_title('Help')) }
    end
 
+   # TEST: Existence of about page
    describe "About page" do
      before { visit about_path }
 
@@ -26,6 +29,7 @@ describe "Static pages" do
      it { should have_selector('title', text: full_title('About Us')) }
    end
 
+   # TEST: Existence of contact page
    describe "Contact page" do
      before { visit contact_path }
 
@@ -33,6 +37,7 @@ describe "Static pages" do
      it { should have_selector('title', text: full_title('Contact')) }
    end
 
+   # Our expectations are that...
    it "should have the right links on the layout" do
      visit root_path
      click_link "About"
