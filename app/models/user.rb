@@ -15,9 +15,7 @@ class User < ActiveRecord::Base
 
   # :password is provided by:
   has_secure_password
-  # If has_secure_password is unavailable, we will throw an exception
 
-  # All emails entering the DB will be downcased
   before_save { email.downcase! }
   # can also be written as:
   # before_save { |user| user.email = user.email.downcase }
@@ -33,7 +31,7 @@ class User < ActiveRecord::Base
   validates :password_confirmation, presence: true
 
  private
-
+  # Create user's remember token
   def create_remember_token
     self.remember_token = SecureRandom.urlsafe_base64
   end 

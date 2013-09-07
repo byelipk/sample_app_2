@@ -1,5 +1,6 @@
 module SessionsHelper
 
+  
   def sign_in(user)
     cookies.permanent[:remember_token] = user.remember_token
     # The purpose of this line is to create current_user, accessible in both controllers and views
