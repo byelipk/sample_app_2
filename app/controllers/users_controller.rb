@@ -6,8 +6,9 @@ class UsersController < ApplicationController
   
   # NOTE: before_filter can take a hash of actions which require the
   # -- protection of before_filter.
-  before_filter :signed_in_user, only: [:edit, :update]
+  before_filter :signed_in_user, only: [:index, :edit, :update]
   before_filter :correct_user, only: [:edit, :update]
+  before_filter :admin_user, only: :destroy
 
   # NOTE: Instance variables ALWAYS start off with a value of NIL
   # -- Make sure to define an instance variable within each action,
@@ -17,6 +18,10 @@ class UsersController < ApplicationController
   # -- where 'model_xxxx' refers to the name of the property you
   # -- are trying to access. It could be 'model_name', 'model_email', etc...
   
+   def index
+    @users = User.paginate(page: params[:page])
+  end
+
   def show
     @user = User.find(params[:id])
   end 
@@ -61,6 +66,12 @@ class UsersController < ApplicationController
     end
   end
 
+  def destroy
+    User.find(params[:id]).destroy
+    flash[:success] = "User has been relegated"
+    redirect_to users_path
+  end
+
 
   private
   
@@ -76,5 +87,9 @@ class UsersController < ApplicationController
   def correct_user
     @user = User.find(params[:id])
     redirect_to root_path, notice: "WTF! You trying to hack my shit?" unless current_user?(@user)
+  end
+
+  def admin_user
+    redirect_to root_path unless current_user.admin?
   end
 end
