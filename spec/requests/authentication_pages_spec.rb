@@ -20,13 +20,14 @@ describe "Authentication" do
 
   	describe "with invalid information" do
   		before { click_button "Sign in" }
-  		it { should have_selector('title', text: 'Sign in') }
+  		it { should have_selector('title',                 text: 'Sign in') }
   		it { should have_selector('div.alert.alert-error', text: 'Invalid') }
 
-  	    describe "after visiting another page" do
-          before { click_link "Home" }
-          it { should_not have_selector('div.alert.alert-error') }
-        end	
+
+	    describe "after visiting another page" do
+        before { click_link "Home" }
+        it { should_not have_selector('div.alert.alert-error') }
+      end	
   	end
 
     describe "with valid information" do
@@ -58,9 +59,7 @@ describe "Authentication" do
         describe "when attempting to visit a protected page" do
           before do
             visit edit_user_path(user)
-            fill_in "Email", with: user.email
-            fill_in "Password", with: user.password
-            click_button "Sign in"
+            sign_in user
           end
 
           describe "after signing in" do
@@ -71,10 +70,7 @@ describe "Authentication" do
             describe "when signing in again" do
               before do
                 click_link "Sign out"
-                click_link "Sign in"
-                fill_in "Email", with: user.email
-                fill_in "Password", with: user.password
-                click_button "Sign in"
+                sign_in user
               end
 
               it "should render the profile page" do
