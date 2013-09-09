@@ -16,6 +16,8 @@ class User < ActiveRecord::Base
   # :password is provided by:
   has_secure_password
 
+  has_many :microposts, dependent: :destroy
+
   before_save { email.downcase! }
   # can also be written as:
   # before_save { |user| user.email = user.email.downcase }
@@ -29,6 +31,11 @@ class User < ActiveRecord::Base
   validates :password, length: { minimum: 6 }
   after_validation { self.errors.messages.delete(:password_digest) }
   validates :password_confirmation, presence: true
+
+  def feed
+    # This is only a proto-type
+    Micropost.where("user_id = ?", id)
+  end
 
  private
   # Create user's remember token

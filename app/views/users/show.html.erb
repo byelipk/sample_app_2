@@ -7,19 +7,25 @@
         <%= @user.name %>
       </h1>
     </section>
-    <div class="row">
-	    <div class="span12">
+	<div class="row">
+	    <div class="span4">
 			<div class="well">
-				
 			  	<h5>My humble servants,</h5>
-			  	<h5>We are now optimized for...</h5>
-			  	<h3><strong>STALKING!</strong> :)</h3>
-			  	<h5>Click the users tab to find out more.</h5>
-			  	
-			  	
+			  	<p>It has been decided to add optimization for <strong>STALKING!</strong> :)
+			  	Don't believe me? Click on the users tab to find out.</p>
+			  	<p>Additionally, I hope you are all as excited as I am that you can now post random gibberish on the public domain.</p>
+			  	<h5>Cheer for, not against.</h5>
 			</div>
 		</div>
 	</div>
-   
   </aside>
+  <div class="span8">
+    <% if @user.microposts.any? %>
+      <h3>Microposts (<%= @user.microposts.count %>)</h3>
+      <ol class="microposts">
+        <%= render @microposts %>
+      </ol>
+      <%= will_paginate @microposts %>
+    <% end %>
+  </div>
 </div>

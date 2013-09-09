@@ -6,7 +6,7 @@ class UsersController < ApplicationController
   
   # NOTE: before_filter can take a hash of actions which require the
   # -- protection of before_filter.
-  before_filter :signed_in_user, only: [:index, :edit, :update]
+  before_filter :signed_in_user, only: [:index, :edit, :update, :destroy]
   before_filter :correct_user, only: [:edit, :update]
   before_filter :admin_user, only: :destroy
 
@@ -24,16 +24,28 @@ class UsersController < ApplicationController
 
   def show
     @user = User.find(params[:id])
+    @microposts = @user.microposts.paginate(page: params[:page])
   end 
   
   # Actions new & create work together to create a new user
   def new
-  	@user = User.new
+    if signed_in?
+        redirect_to current_user
+    else
+      @user = User.new
+    end
+    # @user = User.new
   end
 
   # Method: sign_in is defined in sessions_helper.rb
   def create
-    @user = User.new(params[:user])
+    if signed_in?
+        redirect_to current_user
+    else
+      @user = User.new(params[:user])
+    end
+    #@user = User.new(params[:user])
+    
     if @user.save
       # Handle a successfull sign-in
       sign_in @user
@@ -52,7 +64,6 @@ class UsersController < ApplicationController
 
   # Method: sign_in is defined in sessions_helper.rb
   def update
-    @user = User.find(params[:id])
     if @user.update_attributes(params[:user])
       # Handle a successfull update
       
@@ -67,22 +78,21 @@ class UsersController < ApplicationController
   end
 
   def destroy
-    User.find(params[:id]).destroy
-    flash[:success] = "User has been relegated"
-    redirect_to users_path
+    user = User.find(params[:id])
+    if user.admin == false
+      user.destroy
+      flash[:success] = "User has been relegated"
+      redirect_to users_path
+    else
+      flash[:success] = "Admin users cannot be deleted"
+      redirect_to users_path
+    end
+
   end
 
 
   private
   
-  # Direct users who are not logged-in to sign-in page
-  # Method: signed_in? is defined in sessions_helper.rb
-  def signed_in_user
-    unless signed_in?
-      store_location
-      redirect_to signin_path, notice:"Whoops! Looks like you need to sign in." unless signed_in?
-    end
-  end
 
   def correct_user
     @user = User.find(params[:id])

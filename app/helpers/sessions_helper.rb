@@ -36,4 +36,12 @@ module SessionsHelper
     redirect_to(session[:return_to] || default)
     session.delete(:return_to)
   end
+
+  # Direct users who are not logged-in to sign-in page
+  def signed_in_user
+    unless signed_in?
+      store_location
+      redirect_to signin_path, notice:"Whoops! Looks like you need to sign in."
+    end
+  end  
 end
