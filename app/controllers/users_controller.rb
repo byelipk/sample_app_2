@@ -1,12 +1,11 @@
 class UsersController < ApplicationController
 
   # NOTE: A before_filter runs before any action in the controller
-  # -- It takes a symbol, which corresponds to a method at the end
-  # -- of the controller of the same name.
+  # -- It takes a symbol, which corresponds to a private method of the controller
   
   # NOTE: before_filter can take a hash of actions which require the
   # -- protection of before_filter.
-  before_filter :signed_in_user, only: [:index, :edit, :update, :destroy]
+  before_filter :signed_in_user, only: [:index, :edit, :update, :destroy, :following, :followers]
   before_filter :correct_user, only: [:edit, :update]
   before_filter :admin_user, only: :destroy
 
@@ -17,8 +16,10 @@ class UsersController < ApplicationController
   # -- NoMethodError: undefined method `model_xxxxx' for NilClass:Class
   # -- where 'model_xxxx' refers to the name of the property you
   # -- are trying to access. It could be 'model_name', 'model_email', etc...
-  
-   def index
+
+
+
+  def index
     @users = User.paginate(page: params[:page])
   end
 
@@ -27,7 +28,7 @@ class UsersController < ApplicationController
     @microposts = @user.microposts.paginate(page: params[:page])
   end 
   
-  # Actions new & create work together to create a new user
+
   def new
     if signed_in?
         redirect_to current_user
@@ -37,7 +38,6 @@ class UsersController < ApplicationController
     # @user = User.new
   end
 
-  # Method: sign_in is defined in sessions_helper.rb
   def create
     if signed_in?
         redirect_to current_user
@@ -56,13 +56,10 @@ class UsersController < ApplicationController
     end
   end 
 
-# Actions edit & update work together to update a new user
-  
+
   def edit
-    
   end
 
-  # Method: sign_in is defined in sessions_helper.rb
   def update
     if @user.update_attributes(params[:user])
       # Handle a successfull update
@@ -76,6 +73,7 @@ class UsersController < ApplicationController
       render 'edit'
     end
   end
+
 
   def destroy
     user = User.find(params[:id])
@@ -91,8 +89,21 @@ class UsersController < ApplicationController
   end
 
 
+  def following
+    @title = "Following"
+    @user = User.find(params[:id])
+    @users = @user.followed_users.paginate(page: params[:page])
+    render 'show_follow'
+  end
+
+  def followers
+    @title = "Followers"
+    @user = User.find(params[:id])
+    @users = @user.followers.paginate(page: params[:page])
+    render 'show_follow'
+  end
+
   private
-  
 
   def correct_user
     @user = User.find(params[:id])

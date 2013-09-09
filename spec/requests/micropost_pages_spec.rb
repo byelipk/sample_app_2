@@ -22,7 +22,8 @@ describe "MicropostPages" do
 				it { should have_content('error') }
 			end
 		end
-	end
+  end
+
 	describe "micropost destruction" do
       before { FactoryGirl.create(:micropost, user: user) }
 
@@ -34,4 +35,5 @@ describe "MicropostPages" do
       end
     end
   end
+
 end
